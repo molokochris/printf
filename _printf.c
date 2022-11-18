@@ -1,50 +1,48 @@
-#include "main.h"
-
+#include <stdio.h>
+#include <stdarg.h>
+#include "holberton.h"
 /**
- * _printf - prints formatted data to stdout
- * @format: string that contains the format to print
- * Return: number of characters written
- */
-int _printf(char *format, ...)
+ * _printf - prints anything
+ * @format: pointer to string that contains specifiers
+ * Return: number of characters printed
+ **/
+int _printf(const char *format, ...)
 {
-	int written = 0, (*structype)(char *, va_list);
-	char q[3];
-	va_list pa;
+	unsigned int count = 0, i = 0;
+	int (*f)(va_list);
+	va_list list;
 
-	if (format == NULL)
+	if (format == '\0')
 		return (-1);
-	q[2] = '\0';
-	va_start(pa, format);
-	_putchar(-1);
-	while (format[0])
+	va_start(list, format);
+	while (format && format[i])
 	{
-		if (format[0] == '%')
+		if (format[i] != '%')
 		{
-			structype = driver(format);
-			if (structype)
+			_putchar(format[i]);
+			count++;
+		}
+		else if (format[i] == '%' && format[i + 1] == '\0')
+			return (-1);
+		else if (format[i] == '\0')
+			return (count);
+		else if (format[i] == '%')
+		{
+			f = getspecifier(format, i + 1);
+			i += 1;
+			if (f == NULL)
 			{
-				q[0] = '%';
-				q[1] = format[1];
-				written += structype(q, pa);
-			}
-			else if (format[1] != '\0')
-			{
-				written += _putchar('%');
-				written += _putchar(format[1]);
+				count += strange(format, i);
 			}
 			else
 			{
-				written += _putchar('%');
-				break;
+				count = count + f(list);
+				if (format[i] == '+' || format[i] == ' ' || format[i] == '#')
+					i++;
 			}
-			format += 2;
 		}
-		else
-		{
-			written += _putchar(format[0]);
-			format++;
-		}
+		i++;
 	}
-	_putchar(-2);
-	return (written);
+	va_end(list);
+	return (count);
 }
