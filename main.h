@@ -1,5 +1,5 @@
-#ifndef HOLBERTON_H
-#define HOLBERTON_H
+#ifndef MAIN_H
+#define MAIN_H
 #include <stdarg.h>
 /**
  * struct mystr - pointer to function with corresponding letter
@@ -36,4 +36,4 @@ int _space_i(va_list);
 int _diez_o(va_list);
 int _diez_x(va_list);
 int _diez_X(va_list);
-#endif
+#endif /* MAIN_H */
